@@ -28,9 +28,7 @@ class Model(nn.Module):
         self.Act1d = nn.ReLU()
         self.Pool1d = nn.MaxPool1d(3)
 
-        # self.Conv2d = nn.Conv2d(1, 32, 7, 1, 3)
-        # self.BN2d = nn.BatchNorm2d(32)
-        # self.Act2d1 = nn.ReLU()
+
         #ASPP
         self.Conv2d1 = nn.Conv2d(1, 32, 1, 1)
         self.BN2d1 = nn.BatchNorm2d(32)
@@ -45,9 +43,8 @@ class Model(nn.Module):
         self.BN2d4 = nn.BatchNorm2d(32)
         self.Act2d4 = nn.ReLU()
 
-        self.Pool2d = SpatialPyramidPooling(4)  # 5
-        # self.adaptive_pool = nn.AdaptiveAvgPool2d((8, 8)) # not complicated enough for the data
-        self.Flatten1 = nn.Linear(960, 1024)  # 1760
+        self.Pool2d = SpatialPyramidPooling(4)
+        self.Flatten1 = nn.Linear(960, 1024)
         self.Act2d5 = nn.ReLU()
         self.drop = nn.Dropout(0.5)
         self.Flatten2 = nn.Linear(1024, 1)
@@ -64,11 +61,7 @@ class Model(nn.Module):
                 nn.init.kaiming_normal_(module.weight, mode='fan_in', nonlinearity='relu')
                 if module.bias is not None:
                     nn.init.zeros_(module.bias)
-            # adding on Dec 1st
-            # elif isinstance(module, nn.Linear):
-            #     nn.init.xavier_uniform_(module.weight)
-            #     if module.bias is not None:
-            #         nn.init.zeros_(module.bias)
+
 
     def forward(self, x):
         inputA = x[:, 0, None, :]

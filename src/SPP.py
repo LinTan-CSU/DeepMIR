@@ -34,8 +34,8 @@ class Model(nn.Module):
         self.Conv2d = nn.Conv2d(1, 32, 7, 1, 3)
         self.BN2d = nn.BatchNorm2d(32)
         self.Act2d1 = nn.ReLU()
-        self.Pool2d = SpatialPyramidPooling(4)  # 5
-        self.Flatten1 = nn.Linear(960, 1024)  # 1760
+        self.Pool2d = SpatialPyramidPooling(4)
+        self.Flatten1 = nn.Linear(960, 1024)
         self.Act2d2 = nn.ReLU()
         self.drop = nn.Dropout(0.5)
         self.Flatten2 = nn.Linear(1024, 1)

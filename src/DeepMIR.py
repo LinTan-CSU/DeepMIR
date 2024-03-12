@@ -32,9 +32,9 @@ class MyModel(nn.Module):
         self.Conv2d = nn.Conv2d(1, 32, 7, 1, 3)
         self.BN2d = nn.BatchNorm2d(32)
         self.Pool2d = SpatialPyramidPooling(4)
-        self.Flatten1 = nn.Linear(960, 1024) #1024
+        self.Flatten1 = nn.Linear(960, 1024)
         self.drop = nn.Dropout(0.5)
-        self.Flatten2 = nn.Linear(1024, 1) #1024
+        self.Flatten2 = nn.Linear(1024, 1)
 
     def forward(self, x):
         inputA = x[:, 0, None, :]
