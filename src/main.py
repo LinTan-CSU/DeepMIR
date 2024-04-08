@@ -1,6 +1,6 @@
 import torch
-# from SNN import Model
-# from SPP import Model
+# from ModelA import Model
+# from ModelB import Model
 from DeepMIR import Model
 from Dataset import Dataset
 import torch.utils.data as data
@@ -13,9 +13,9 @@ import numpy as np
 import random
 
 start = time.time()
-train_dataset = Dataset('../data/traindataset_HRAldrich_2023-08-21_10-17-57_mirrored.npy', '../data/trainlabels_HRAldrich_2023-08-21_10-17-57.npy')
+train_dataset = Dataset('../data/traindataset.npy', '../data/trainlabels.npy')
 train_dataloader = data.DataLoader(train_dataset, shuffle=True, batch_size=64)
-valid_dataset = Dataset('../data/validdataset_HRAldrich_2023-08-21_10-17-57_mirrored.npy', '../data/validlabels_HRAldrich_2023-08-21_10-17-57.npy')
+valid_dataset = Dataset('../data/validdataset.npy', '../data/validlabels.npy')
 valid_dataloader = data.DataLoader(valid_dataset, shuffle=False, batch_size=64)
 
 
@@ -155,10 +155,3 @@ plt.show()
 
 end = time.time()
 print('Training finished, time:%.2fSeconds' % (end - start))
-
-
-
-
-
-
-
