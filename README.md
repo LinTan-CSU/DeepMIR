@@ -8,6 +8,6 @@ MIR). Other methods for comparsion in the paper are also presented. Organic solv
 # Requirements
 Before running codes in your own computer, make sure you have established an environment required by this project.
 ## Create a Conda environment
-    conda env create -f environment.yml -n myenv
+    conda env create -f requirements.yml -n myenv
 ## Activate the Conda environment
     activate myenv
