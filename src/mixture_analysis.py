@@ -2,8 +2,8 @@
 from Dataset import Dataset
 import torch.utils.data as data
 import torch
-# from SNN import Model
-# from SPP import Model
+# from ModelA import Model
+# from ModelB import Model
 from DeepMIR import Model
 import time
 import datetime
@@ -13,8 +13,8 @@ timestamp = time.strftime("%Y%m%d-%H%M%S")
 now = datetime.datetime.now()
 
 # Define the path to the saved model file
-# model_path = '../model/SNN.pth'  # SNN
-# model_path = '../model/SPP.pth'  # SPP
+# model_path = '../model/ModelA.pth'  # ModelA
+# model_path = '../model/ModelB.pth'  # ModelB
 model_path = '../model/DeepMIR.pth'
 
 test_dataset = Dataset('../data/reftest_Binary.npy')
