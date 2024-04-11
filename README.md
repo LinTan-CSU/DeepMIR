@@ -10,3 +10,5 @@ Before running codes in your own computer, make sure you have established an env
     conda env create -f requirements.yml -n myenv
 ## Activate the Conda environment
     activate myenv
+## Example
+You can see the example.ipynb from the "src" folder for the utilization of DeepMIR. If you want to try the codes on your own computer, please download the whole project and the Organic Solvents dataset from the Releases. Try other sub-datasets based on the example.ipynb. 
