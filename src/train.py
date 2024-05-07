@@ -1,6 +1,6 @@
 import torch
-# from ModelA import Model
-# from ModelB import Model
+# from DeepRaman import Model
+# from SCNN-DCNN import Model
 from DeepMIR import Model
 from Dataset import Dataset
 import torch.utils.data as data
