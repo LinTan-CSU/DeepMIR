@@ -17,7 +17,7 @@ If you want to download the datasets automatically from the Releases, [wget](htt
 ## Use wget
     wget https://github.com/LinTan-CSU/DeepMIR/releases/tag/OrganicSolventsDataset/Binary.npy -P ../data/
 # Web server
-A web server of DeepMIR[https://huggingface.co/spaces/LinTan-CSU/DeepMIR] is established. Please refer to the paper for more details.
+A web server of [DeepMIR](https://huggingface.co/spaces/LinTan-CSU/DeepMIR) is established. Please refer to the paper for more details.
 
 <div align=center>
 <img src="/fig/web.png" width="600px" align="float:center" />
