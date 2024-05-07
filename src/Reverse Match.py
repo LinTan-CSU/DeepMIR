@@ -35,8 +35,7 @@ def RM(test_dataset, batch_size, lib):
     return row_data
 
 if __name__ == '__main__':
-    test_dataset = '../data/test_dataset.npy'
-    batch_size = 10
-    lib = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+    test_dataset = '../data/Quinary.npy'
+    batch_size = 12
+    lib = ['1,2-dichloroethane', '1-butanol', 'acetonitrile', 'cyclohexane', 'dichloromethane', 'diethylene_glycol_dimethyl_ether', 'ethanol', 'hexane', 'isopropyl_alcohol', 'methanol', 'toluene', 'trichloromethane']
     RM(test_dataset, batch_size, lib)
-    
