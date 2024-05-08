@@ -6,7 +6,18 @@ class SpatialPyramidPooling(nn.Module):
     def __init__(self, levels):
         super(SpatialPyramidPooling, self).__init__()
         self.levels = levels
-
+    """
+    * Spatial Pyramid Pooling (SPP) module
+    *
+    * Attributes
+    * ----------
+    * levels : number of levels of SPP
+    * x : input of SPP
+    *
+    * Returns
+    * -------
+    * out : results of SPP
+    """
     def forward(self, x):
         N, C, H, W = x.shape
         bins = []
@@ -21,13 +32,23 @@ class SpatialPyramidPooling(nn.Module):
         return out
 
 class Model(nn.Module):
+    """
+    * Construct the SCNN-DCNN model
+    *
+    * Attributes
+    * ----------
+    * x : inputs of the model
+    *
+    * Returns
+    * -------
+    * outputs : outputs of the model
+    """
     def __init__(self):
         super(Model, self).__init__()
         self.Conv1d = nn.Conv1d(1, 32, 7, 1, 3)
         self.BN1d = nn.BatchNorm1d(32)
         self.Act1d = nn.ReLU()
         self.Pool1d = nn.MaxPool1d(3)
-
 
         #ASPP
         self.Conv2d1 = nn.Conv2d(1, 32, 1, 1)
@@ -97,5 +118,3 @@ class Model(nn.Module):
         Flatten2 = self.Flatten2(drop)
         outputs = self.Act2d6(Flatten2)
         return outputs
-
-
