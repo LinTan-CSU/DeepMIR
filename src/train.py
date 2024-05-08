@@ -30,7 +30,7 @@ def train(train_set_path, train_labels_path, valid_set_path, valid_labels_path, 
     *
     * Returns
     * -------
-    * model.state_dict() : the trained model , , , valid_accuracy
+    * model.state_dict() : the trained model
     * train_loss : the loss of the training set
     * valid_loss : the loss of the validation set
     * train_accuracy : the accuracy of the training set
