@@ -3,6 +3,18 @@ import torch
 import torch.nn as nn
 
 class SpatialPyramidPooling(nn.Module):
+    """
+    * Spatial Pyramid Pooling (SPP) module
+    *
+    * Attributes
+    * ----------
+    * levels : number of levels of SPP
+    * x : input of SPP
+    *
+    * Returns
+    * -------
+    * out : results of SPP
+    """
     def __init__(self, levels):
         super(SpatialPyramidPooling, self).__init__()
         self.levels = levels
@@ -21,6 +33,17 @@ class SpatialPyramidPooling(nn.Module):
         return out
 
 class Model(nn.Module):
+    """
+    * Construct the DeepRaman model
+    *
+    * Attributes
+    * ----------
+    * x : inputs of the model
+    *
+    * Returns
+    * -------
+    * outputs : outputs of the model
+    """
     def __init__(self):
         super(Model, self).__init__()
         self.Conv1dA = nn.Conv1d(1, 32, 7, 1, 3)
@@ -75,5 +98,3 @@ class Model(nn.Module):
         Flatten2 = self.Flatten2(drop)
         outputs = self.Act2d3(Flatten2)
         return outputs
-
-
