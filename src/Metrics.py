@@ -1,19 +1,33 @@
 import csv
 
-def Metrics(output_file, labels_file, threshold=0.5):
-
+def Metrics(output_file_path, labels_file_path, threshold=0.5):
+    """
+    * Metrics
+    *
+    * Attributes
+    * ----------
+    * output_file_path : File path for storing the output file
+    * labels_file_path : File path for storing the labels file
+    * threshold : threshold for predicted probabilities
+    *
+    * Returns
+    * -------
+    * TPR : the true positive rate of predicted results
+    * TNR : the true negative rate of predicted results
+    * ACC : the accuracy of predicted results
+    """
     TP = []
     TN = []
     FP = []
     FN = []
 
     # Read the output file
-    with open(output_file, 'r') as file:
+    with open(output_file_path, 'r') as file:
         reader = csv.reader(file)
         output_data = list(reader)
 
     # Read the labels file
-    with open(labels_file, 'r') as file:
+    with open(labels_file_path, 'r') as file:
         reader = csv.reader(file)
         labels_data = list(reader)
 
