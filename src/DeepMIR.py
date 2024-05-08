@@ -3,6 +3,18 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 class SpatialPyramidPooling(nn.Module):
+    """
+    * Spatial Pyramid Pooling (SPP) module
+    *
+    * Attributes
+    * ----------
+    * levels : number of levels of SPP
+    * x : input of SPP
+    *
+    * Returns
+    * -------
+    * out : results of SPP
+    """
     def __init__(self, levels):
         super(SpatialPyramidPooling, self).__init__()
         self.levels = levels
@@ -20,9 +32,20 @@ class SpatialPyramidPooling(nn.Module):
         out = torch.cat([bin.view(N, -1) for bin in bins], dim=1)
         return out
 
-class MyModel(nn.Module):
+class Model(nn.Module):
+    """
+    * Construct the DeepMIR model
+    *
+    * Attributes
+    * ----------
+    * x : inputs of the model
+    *
+    * Returns
+    * -------
+    * outputs : outputs of the model
+    """
     def __init__(self):
-        super(MyModel, self).__init__()
+        super(Model, self).__init__()
         self.Conv1dA = nn.Conv1d(1, 32, 7, 1, 3)
         self.BN1dA = nn.BatchNorm1d(32)
         self.Pool1dA = nn.MaxPool1d(3)
