@@ -3,7 +3,7 @@
 </div>
 
 # DeepMIR
-There are some codes for the paper DeepMIR: a versatile and accurate component identification method for high-throughput mid-infrared spectra. We developed a method named Deep learning-based library search method for Mid-infrared spectroscopy (DeepMIR). Other methods for comparison in the paper are also presented. Organic solvents datasets are public for example applications.
+There are some codes for the paper DeepMIR: A Versatile Deep Learning Method for Accurate Com-ponent Identification in Mid-Infrared Spectra of Mixtures. We developed a Deep learning-based library search method for Mid-infrared spectroscopy (DeepMIR). Other methods for comparison in the paper are also presented. The Liquid Mixture dataset is public for example applications.
 # Requirements
 Before running codes on your own computer, make sure you have established an environment required by this project.
 ## Create a Conda environment
