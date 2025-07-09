@@ -197,7 +197,7 @@ def train(
     print('Training finished')
     writer.close()
 
-    torch.save(model.state_dict(), '../model/train_{}.pth'.format(name))
+    torch.save(model.state_dict(), '../model/{}.pth'.format(name))
 
     np.save('../res/train_loss_{}.npy'.format(name), train_loss)
     np.save('../res/valid_loss_{}.npy'.format(name), valid_loss)
@@ -225,7 +225,7 @@ def train(
 if __name__ == '__main__':
     # replace with your data in the following code
     train(
-        name='trial_1',
+        name='DeepMIR',
         lr=0.00823,
         epochs=100,
         batch_size=100,
