@@ -1,36 +1,51 @@
-import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-class SpatialPyramidPooling(nn.Module):
+from torch.nn import TransformerEncoder, TransformerEncoderLayer
+import math
+
+class SpectralPositionalEncoding(nn.Module):
     """
-    * Spatial Pyramid Pooling (SPP) module
+    * Spectral Positional Encoding module for sequence data
     *
     * Attributes
     * ----------
-    * levels : number of levels of SPP
-    * x : input of SPP
+    * d_model : int
+    *     The dimension of the model (feature size).
+    * dropout : float
+    *     Dropout rate applied after adding positional encoding.
+    * max_len : int
+    *     Maximum sequence length supported.
+    *
+    * Methods
+    * -------
+    * forward(x)
+    *     Add positional encoding to the input tensor.
+    *
+    * Parameters
+    * ----------
+    * x : torch.Tensor
+    *     Input tensor of shape (batch_size, sequence_length, d_model)
     *
     * Returns
     * -------
-    * out : results of SPP
+    * torch.Tensor
+    *     Output tensor with positional encoding added, same shape as input.
     """
-    def __init__(self, levels):
-        super(SpatialPyramidPooling, self).__init__()
-        self.levels = levels
+    def __init__(self, d_model, dropout=0.1, max_len=3000):
+        super(SpectralPositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * -(math.log(10000.0) / d_model))
+        pe = torch.zeros(max_len, d_model)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+
+        self.register_buffer('pe', pe.unsqueeze(0))
 
     def forward(self, x):
-        N, C, H, W = x.shape
-        bins = []
-        for l in range(self.levels):
-            kh = int(np.ceil(H / (l + 1)))
-            kw = int(np.ceil(W / (l + 1)))
-            sh = int(np.floor(H / (l + 1)))
-            sw = int(np.floor(W / (l + 1)))
-            pool = nn.MaxPool2d(kernel_size=(kh, kw), stride=(sh, sw))
-            bins.append(pool(x))
-        out = torch.cat([bin.view(N, -1) for bin in bins], dim=1)
-        return out
+        x = x + self.pe[:, :x.size(1)]
+        return self.dropout(x)
 
 class Model(nn.Module):
     """
@@ -38,47 +53,85 @@ class Model(nn.Module):
     *
     * Attributes
     * ----------
-    * x : inputs of the model
+    * d_model : int
+    *     The dimension of the model (feature size for transformer and last conv layer).
+    * nhead : int
+    *     Number of attention heads in the transformer encoder.
+    * num_layers : int
+    *     Number of transformer encoder layers.
+    * trans_dropout : float
+    *     Dropout rate for the transformer encoder.
+    * mlp_dropout : float
+    *     Dropout rate for the MLP classifier.
+    *
+    * Methods
+    * -------
+    * forward(inputs)
+    *     Forward pass of the model.
+    *
+    * Parameters
+    * ----------
+    * inputs : torch.Tensor
+    *     Input tensor of shape (batch_size, 2, sequence_length)
     *
     * Returns
     * -------
-    * outputs : outputs of the model
+    * output : torch.Tensor
+    *     Output tensor of shape (batch_size, 1)
     """
-    def __init__(self):
+    def __init__(self, d_model=128, nhead=8, num_layers=2, trans_dropout=0.19, mlp_dropout=0.28):
         super(Model, self).__init__()
-        self.Conv1dA = nn.Conv1d(1, 32, 7, 1, 3)
-        self.BN1dA = nn.BatchNorm1d(32)
-        self.Pool1dA = nn.MaxPool1d(3)
-        self.Conv1dB = nn.Conv1d(1, 32, 7, 1, 3)
-        self.BN1dB = nn.BatchNorm1d(32)
-        self.Pool1dB = nn.MaxPool1d(3)
-        self.Conv2d = nn.Conv2d(1, 32, 7, 1, 3)
-        self.BN2d = nn.BatchNorm2d(32)
-        self.Pool2d = SpatialPyramidPooling(4)
-        self.Flatten1 = nn.Linear(960, 1024)
-        self.drop = nn.Dropout(0.5)
-        self.Flatten2 = nn.Linear(1024, 1)
+        self.Conv1 = nn.Conv1d(2, 32, 5, 1, 2)
+        self.BN1 = nn.BatchNorm1d(32)
+        self.Conv2 = nn.Conv1d(32, 64, 5, 1, 2)
+        self.BN2 = nn.BatchNorm1d(64)
+        self.Conv3 = nn.Conv1d(64, d_model, 3, 1, 1)
+        self.BN3 = nn.BatchNorm1d(d_model)
+        self.act = nn.ReLU()
+        self.pool = nn.MaxPool1d(2)
+        self.dropout = nn.Dropout(0.3)
 
-    def forward(self, x):
-        inputA = x[:, 0, None, :]
-        inputB = x[:, 1, None, :]
-        Conv1dA = self.Conv1dA(inputA)
-        BN1dA = self.BN1dA(Conv1dA)
-        Act1dA = F.relu(BN1dA)
-        Pool1dA = self.Pool1dA(Act1dA)
-        Conv1dB = self.Conv1dB(inputB)
-        BN1dB = self.BN1dA(Conv1dB)
-        Act1dB = F.relu(BN1dB)
-        Pool1dB = self.Pool1dA(Act1dB)
-        con = torch.cat([Pool1dA, Pool1dB], dim=1)
-        con = torch.unsqueeze(con, 1)
-        Conv2d = self.Conv2d(con)
-        BN2d = self.BN2d(Conv2d)
-        Act2d1 = F.relu(BN2d)
-        Pool2d = self.Pool2d(Act2d1)
-        Flatten1 = self.Flatten1(Pool2d)
-        Act2d2 = F.relu(Flatten1)
-        drop = self.drop(Act2d2)
-        Flatten2 = self.Flatten2(drop)
-        outputs = torch.sigmoid(Flatten2)
-        return outputs
+        self.spec_pos = SpectralPositionalEncoding(d_model)
+        encoder_layers = TransformerEncoderLayer(d_model=d_model, nhead=nhead, dropout=trans_dropout)
+        self.transformer_encoder = TransformerEncoder(encoder_layers, num_layers=num_layers)
+        self.layer_norm = nn.LayerNorm(d_model)
+
+        self.mlp = nn.Sequential(
+            nn.Linear(d_model, 64),
+            nn.ReLU(),
+            nn.Dropout(mlp_dropout),
+            nn.Linear(64, 1),
+            nn.Sigmoid()
+        )
+        
+        self._init_weights()
+
+    def _init_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv1d) or isinstance(m, nn.Linear):
+                nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm1d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+
+
+    def forward(self, inputs):
+        ref = inputs[:,0,None,:]
+        aug = inputs[:,1,None,:]
+        x = torch.cat([ref, aug], dim=1)  # [B, 2, L]
+        x = self.act(self.BN1(self.Conv1(x)))
+        x = self.pool(x)
+        x = self.act(self.BN2(self.Conv2(x)))
+        x = self.pool(x)
+        x = self.act(self.BN3(self.Conv3(x)))
+        x = self.pool(x)
+        x = self.dropout(x)
+        x = x.permute(0, 2, 1)  # [B, seq, feature]
+        x = self.spec_pos(x)
+        x = self.transformer_encoder(x)
+        x = self.layer_norm(x)
+        x = x.mean(dim=1)
+        output = self.mlp(x)
+        return output
