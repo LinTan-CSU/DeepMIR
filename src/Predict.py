@@ -2,7 +2,7 @@ import pandas as pd
 import torch
 # from DeepRaman import Model
 from DeepMIR import Model
-from Dataset import Dataset
+from dataset import Dataset
 import torch.utils.data
 import csv
 
