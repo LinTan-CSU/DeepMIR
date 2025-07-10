@@ -1,14 +1,13 @@
 import pandas as pd
 import torch
 # from DeepRaman import Model
-# from SCNN-DCNN import Model
 from DeepMIR import Model
 from Dataset import Dataset
 import torch.utils.data
 import csv
 
 
-def predict(model_path, test_dataset_path, lib):
+def predict(model_path, test_dataset_path, test_labels):
     """
     * Prediction
     *
@@ -16,7 +15,7 @@ def predict(model_path, test_dataset_path, lib):
     * ----------
     * model_path : File path for storing the model
     * test_dataset_path : File path for storing the test dataset
-    * lib : List of names of reference components
+    * test_labels : List of names of reference components
     *
     * Returns
     * -------
@@ -27,7 +26,7 @@ def predict(model_path, test_dataset_path, lib):
     model.load_state_dict(state_dict)
     model.eval()
     test_dataset = Dataset(test_dataset_path)
-    test_dataloader = torch.utils.data.DataLoader(test_dataset, shuffle=False, batch_size=len(lib))
+    test_dataloader = torch.utils.data.DataLoader(test_dataset, shuffle=False, batch_size=len(test_labels))
 
     csv_file = '../res/DeepMIR.csv'
     with open(csv_file, 'w', newline='') as f:
@@ -37,12 +36,12 @@ def predict(model_path, test_dataset_path, lib):
             inputs = data
             outputs = model(inputs)
 
-            top_values, top_indices = torch.topk(outputs.view(-1), k=len(lib))
+            top_values, top_indices = torch.topk(outputs.view(-1), k=len(test_labels))
 
             # Prepare the row data as a list
             row_data = []
-            for j in range(len(lib)):
-                row_data.extend([lib[top_indices[j]], float(top_values[j])])
+            for j in range(len(test_labels)):
+                row_data.extend([test_labels[top_indices[j]], float(top_values[j])])
 
             # Write the row data to the CSV file
             writer.writerow(row_data)
@@ -54,8 +53,8 @@ def predict(model_path, test_dataset_path, lib):
 if __name__ == '__main__':
     model_path = '../model/DeepMIR.pth'
     test_dataset_path = '../data/Quinary.npy'
-    lib = ['1,2-dichloroethane', '1-butanol', 'acetonitrile', 'cyclohexane', 'dichloromethane',
+    test_labels = ['1,2-dichloroethane', '1-butanol', 'acetonitrile', 'cyclohexane', 'dichloromethane',
            'diethylene_glycol_dimethyl_ether', 'ethanol', 'hexane', 'isopropyl_alcohol', 'methanol', 'toluene',
            'trichloromethane']
-    results = predict(model_path, test_dataset_path, lib)
+    results = predict(model_path, test_dataset_path, test_labels)
     print(results)
