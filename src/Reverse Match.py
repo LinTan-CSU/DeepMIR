@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.signal import find_peaks
-from Dataset import Dataset
+from dataset import Dataset
 import torch.utils.data
 import torch
 import csv
