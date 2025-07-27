@@ -1,5 +1,5 @@
 <div align=center>
-<img src="/fig/abstract.png" width="300px" align="float:center" />
+<img src="/fig/abstract.png" width="600px" align="float:center" />
 </div>
 
 # DeepMIR
