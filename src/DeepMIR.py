@@ -79,7 +79,7 @@ class Model(nn.Module):
     * output : torch.Tensor
     *     Output tensor of shape (batch_size, 1)
     """
-    def __init__(self, d_model=128, nhead=8, num_layers=2, trans_dropout=0.19, mlp_dropout=0.28):
+    def __init__(self, d_model=64, nhead=2, num_layers=3, trans_dropout=0.1, mlp_dropout=0.4):
         super(Model, self).__init__()
         self.Conv1 = nn.Conv1d(2, 32, 5, 1, 2)
         self.BN1 = nn.BatchNorm1d(32)
