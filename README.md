@@ -3,7 +3,7 @@
 </div>
 
 # DeepMIR
-There are some codes associated with the paper "DeepMIR: Targeted Component Identification in Mid-Infrared Spectra of Mixtures Using a Deep Learning Model." We developed a Deep learning-based library search method for Mid-infrared spectroscopy (DeepMIR). Other methods for comparison in the paper are also presented. The Liquid Mixture dataset is public for example applications.
+There are some codes associated with the paper "DeepMIR: A Hybrid CNN-Transformer Framework for Accurate Identification of Target Components from Mid-Infrared Spectra of Mixtures." We developed a Deep learning-based library search method for Mid-infrared spectroscopy (DeepMIR). Other methods for comparison in the paper are also presented. The Liquid Mixture dataset is public for example applications.
 # Requirements
 Before running the code on your computer, ensure that you have set up the required environment for this project.
 ## Create a Conda environment
